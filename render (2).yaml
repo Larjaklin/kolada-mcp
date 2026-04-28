@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: kolada-mcp
+    runtime: python
+    plan: free
+    region: frankfurt
+    branch: main
+    buildCommand: pip install -r requirements.txt
+    startCommand: python server.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12"
+      - key: PORT
+        value: "8000"
+    healthCheckPath: /mcp
