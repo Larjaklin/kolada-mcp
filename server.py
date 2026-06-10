@@ -184,7 +184,7 @@ async def kolada_get_kpi_metadata(kpi_id: str) -> dict:
     Användbart innan man hämtar faktisk data för att förstå vad
     nyckeltalet mäter.
     """
-    data = await kolada_get(f"/kpi/{kpi_id}")
+    data = await kolada_get(f"/kpi/{quote(kpi_id, safe=',')}")
     return {
         "kpi_ids": kpi_id,
         "count": data.get("count", 0),
@@ -227,9 +227,12 @@ async def kolada_get_data(
                       municipality_id="1480,1493,1496",
                       year="2024")
     """
-    path = f"/data/kpi/{kpi_id}/municipality/{municipality_id}"
+    path = (
+        f"/data/kpi/{quote(kpi_id, safe=',')}"
+        f"/municipality/{quote(municipality_id, safe=',')}"
+    )
     if year.strip():
-        path += f"/year/{year}"
+        path += f"/year/{quote(year, safe=',')}"
 
     data = await kolada_get(path)
 
@@ -317,9 +320,12 @@ async def kolada_compare_municipalities(
     Returnerar en tabell med {kommun_id, kommun_namn, år, värde_totalt,
     värde_kvinnor, värde_män} för snabb visuell jämförelse.
     """
-    path = f"/data/kpi/{kpi_id}/municipality/{municipality_ids}"
+    path = (
+        f"/data/kpi/{quote(kpi_id, safe=',')}"
+        f"/municipality/{quote(municipality_ids, safe=',')}"
+    )
     if year.strip():
-        path += f"/year/{year}"
+        path += f"/year/{quote(year, safe=',')}"
     data = await kolada_get(path)
 
     # Strukturera till en rad per kommun × år
