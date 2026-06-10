@@ -199,7 +199,7 @@ async def kolada_get_kpi_metadata(kpi_id: str) -> dict:
 async def kolada_get_data(
     kpi_id: str,
     municipality_id: str,
-    year: Optional[str] = None,
+    year: str = "",
 ) -> dict:
     """
     Hämta värden för ett eller flera KPI × kommun(er) × år.
@@ -228,7 +228,7 @@ async def kolada_get_data(
                       year="2024")
     """
     path = f"/data/kpi/{kpi_id}/municipality/{municipality_id}"
-    if year:
+    if year.strip():
         path += f"/year/{year}"
 
     data = await kolada_get(path)
@@ -290,7 +290,7 @@ async def kolada_list_vg_municipalities() -> dict:
 async def kolada_compare_municipalities(
     kpi_id: str,
     municipality_ids: str,
-    year: Optional[str] = None,
+    year: str = "",
 ) -> dict:
     """
     Hämta och strukturera jämförelse av ett KPI mellan flera kommuner.
@@ -307,7 +307,7 @@ async def kolada_compare_municipalities(
     värde_kvinnor, värde_män} för snabb visuell jämförelse.
     """
     path = f"/data/kpi/{kpi_id}/municipality/{municipality_ids}"
-    if year:
+    if year.strip():
         path += f"/year/{year}"
     data = await kolada_get(path)
 
