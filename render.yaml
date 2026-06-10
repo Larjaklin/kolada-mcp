@@ -12,4 +12,6 @@ services:
         value: "3.12"
       - key: PORT
         value: "8000"
+      - key: PYTHONUTF8
+        value: "1"
     healthCheckPath: /mcp
