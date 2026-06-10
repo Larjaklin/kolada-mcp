@@ -264,21 +264,32 @@ async def kolada_get_data(
 # Verktyg 4: Lista VG-kommuner
 # ----------------------------------------------------------------------------
 @mcp.tool()
-async def kolada_list_vg_municipalities() -> dict:
+async def kolada_list_vg_municipalities(name_filter: str = "") -> dict:
     """
     Lista Västra Götalands 49 kommuner med deras Kolada-ID
     (samma som SCB:s kommunkoder).
 
+    Args:
+        name_filter: Valfritt filter på kommunnamn (delsträng,
+                     skiftlägesokänsligt). Tom sträng listar alla.
+
     Användbart för att slå upp rätt kommun-ID innan anrop till
     kolada_get_data. Region Västra Götaland själv har ID "14".
     """
+    municipalities = VG_MUNICIPALITIES
+    if name_filter.strip():
+        needle = name_filter.strip().lower()
+        municipalities = {
+            mid: name for mid, name in VG_MUNICIPALITIES.items()
+            if needle in name.lower()
+        }
     return {
         "region_id": VG_REGION_ID,
         "region_name": "Västra Götalands län (region)",
-        "municipality_count": len(VG_MUNICIPALITIES),
+        "municipality_count": len(municipalities),
         "municipalities": [
             {"id": mid, "name": name}
-            for mid, name in sorted(VG_MUNICIPALITIES.items(), key=lambda x: x[1])
+            for mid, name in sorted(municipalities.items(), key=lambda x: x[1])
         ],
     }
 
